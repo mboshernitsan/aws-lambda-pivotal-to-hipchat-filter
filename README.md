@@ -1,6 +1,8 @@
-# aws-lambda-hipchat
+# aws-lambda-pivotal-to-hipchat
 
 A simple Lambda function for transforming Pivotal web hook notifications and posting them to a Hip Chat room.
+
+*This is work-in-progress.  Much remains to be done, until this is functional.*
 
 ## Prerequisites
 
