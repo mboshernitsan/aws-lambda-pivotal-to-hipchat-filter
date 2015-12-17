@@ -19,13 +19,13 @@ TODO
 $ export AWS_LAMBDA_ROLE_ARN=...
 ```
 
-### Create the function in AWS Console or CLI
+### Create the function
 ```bash
 $ aws lambda create-function --function-name postToHipChatFromPivotal --runtime nodejs --role ${AWS_LAMBDA_ROLE_ARN} --handler index.handler
 $ export AWS_LAMBDA_FUNCTION_ARN=... # lookup in the output above
 ```
 
-### Create the API endpoint AWS Console or CLI
+### Create the API endpoint
 ```bash
 $ aws apigateway create-rest-api --name "pivotalToHipChat"
 $ export AWS_APIGATEWAY_ID=... # lookup in the output above
