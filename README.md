@@ -26,7 +26,7 @@ $ export AWS_LAMBDA_FUNCTION_ARN=... # lookup in the output above
 ```
 
 ### Create the API endpoint AWS Console or CLI
-```
+```bash
 $ aws apigateway create-rest-api --name "pivotalToHipChat"
 $ export AWS_APIGATEWAY_ID=... # lookup in the output above
 
