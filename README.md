@@ -30,7 +30,7 @@ $ export AWS_LAMBDA_FUNCTION_ARN=... # lookup in the output above
 $ aws apigateway create-rest-api --name "pivotalToHipChat"
 $ export AWS_APIGATEWAY_ID=... # lookup in the output above
 
-$ aws apigateway get-resources --rest-api-id <API ID>
+$ aws apigateway get-resources --rest-api-id ${AWS_APIGATEWAY_ID}
 $ export AWS_APIGATEWAY_RESOURCE_ID=... # lookup root resource id in the output above
 
 $ aws apigateway put-method --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --authorization-type none 
