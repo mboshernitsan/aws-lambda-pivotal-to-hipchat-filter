@@ -1,0 +1,7 @@
+{
+  "message": "<b>test message</b> from test1",
+  "message_format": "html",
+  "color": "green",
+  "notify": false
+}
+
