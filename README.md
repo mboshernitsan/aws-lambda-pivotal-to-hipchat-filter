@@ -4,29 +4,26 @@ A simple Lambda function for transforming Pivotal web hook notifications and pos
 
 *This is work-in-progress.  Much remains to be done, until this is functional.*
 
-## Prerequisites
+## Initial set up
 
-### AWS CLI env vars
-```bash
-export AWS_ACCESS_KEY_ID=...
-export AWS_SECRET_ACCESS_KEY=...
-export AWS_DEFAULT_REGION=...
-```
+This needs to be done once using the AWS CLI commands below or the equivalent AWS Console operations.
 
-### Create AIM role for function
 ```bash
-TODO
+
+# Set env vars for AWS CLI
+$ export AWS_ACCESS_KEY_ID=...
+$ export AWS_SECRET_ACCESS_KEY=...
+$ export AWS_DEFAULT_REGION=...
+
+# Create AIM role for function
+...TODO...
 $ export AWS_LAMBDA_ROLE_ARN=...
-```
 
-### Create the function
-```bash
+# Create the function itself
 $ aws lambda create-function --function-name postToHipChatFromPivotal --runtime nodejs --role ${AWS_LAMBDA_ROLE_ARN} --handler index.handler
 $ export AWS_LAMBDA_FUNCTION_ARN=... # lookup in the output above
-```
 
-### Create the API endpoint
-```bash
+# Create the API endpoint
 $ aws apigateway create-rest-api --name "pivotalToHipChat"
 $ export AWS_APIGATEWAY_ID=... # lookup in the output above
 
@@ -36,6 +33,10 @@ $ export AWS_APIGATEWAY_RESOURCE_ID=... # lookup root resource id in the output 
 $ aws apigateway put-method --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --authorization-type none 
 
 $ aws apigateway put-integration --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --type AWS --integration-http-method POST --uri arn:aws:apigateway:${AWS_DEFAULT_REGION}:lambda:path/2015-03-31/functions/${AWS_LAMBDA_FUNCTION_ARN}/invocations
+
+$ aws apigateway put-method-response --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --status-code 200 --response-models '{ "application/json": "Empty" }'
+
+$ aws apigateway put-integration-response --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --status-code 200 --response-templates '{ "application/json": "" }'
 
 $ aws apigateway create-deployment --rest-api-id ${AWS_APIGATEWAY_ID} --stage-name prod
 

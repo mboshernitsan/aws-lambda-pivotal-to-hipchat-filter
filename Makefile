@@ -36,9 +36,14 @@ ifndef AWS_DEFAULT_REGION
 	$(error AWS_DEFAULT_REGION is undefined)
 endif
 
-# Not ideal, but close enough - attempt to delete funciton first, then attempt to create
 deploy: check-aws-env output/function.zip
 	aws lambda update-function-code --function-name postToHipChatFromPivotal --zip-file fileb://output/function.zip
 
 localtest: output output/index.js output/config.js output/node_modules
 	cd output && node -e "require('./index.js').handler(require('../fixtures/test1.json'), require('aws-lambda-mock-context')())"
+
+test:
+ifndef AWS_LAMBDA_FUNCTION_URL
+	$(error AWS_LAMBDA_FUNCTION_URL is undefined)
+endif
+	curl -X POST -d @fixtures/test1.json $(AWS_LAMBDA_FUNCTION_URL)
