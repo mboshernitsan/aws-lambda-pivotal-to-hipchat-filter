@@ -43,10 +43,18 @@ $ export AWS_LAMBDA_FUNCTION_URL=https://${AWS_APIGATEWAY_ID}.execute-api.${AWS_
 
 ## Development loop
 
-After the steps above, it should be possible run make to deploy and test the function:
+After the steps above, it should be possible run make to deploy and test the function (after setting HIPCHAT_TOKEN and HIPCHAT_ROOM):
 
 ```bash
-$ make deploy
-$ make test
+$ HIPCHAT_TOKEN=... HIPCHAT_ROOM=... make deploy
+$ make posttest
 ```
+
+Alternatively, you can run the tests locally without deploying:
+
+```bash
+$ HIPCHAT_TOKEN=... HIPCHAT_ROOM=... make localtest
+```
+
+Both tests will use the fixtures declared inside the Makefile.  ```make localtest``` will also validate the logic for skipping certain state transitions that we didn't find useful to blast to the team.
 

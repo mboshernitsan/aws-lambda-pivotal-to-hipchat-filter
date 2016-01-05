@@ -1,4 +1,6 @@
 {
+  "expected_status":"sent",
+
   "kind": "comment_create_activity",
   "guid": "472037_3884",
   "project_version": 3884,

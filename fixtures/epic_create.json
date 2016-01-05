@@ -1,4 +1,6 @@
 {
+  "expected_status":"skipped",
+
   "kind": "epic_create_activity",
   "guid": "472037_3895",
   "project_version": 3895,

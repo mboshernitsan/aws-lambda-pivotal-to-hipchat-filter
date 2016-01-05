@@ -2,8 +2,8 @@
   "expected_status":"skipped",
 
   "kind": "story_update_activity",
-  "guid": "472037_3904",
-  "project_version": 3904,
+  "guid": "472037_3914",
+  "project_version": 3914,
   "message": "Marat Boshernitsan edited this feature",
   "highlight": "edited",
   "changes": [
@@ -12,12 +12,12 @@
       "change_type": "update",
       "id": 111022492,
       "original_values": {
-        "story_type": "chore",
-        "updated_at": 1451953807000
+        "description": null,
+        "updated_at": 1451975071000
       },
       "new_values": {
-        "story_type": "feature",
-        "updated_at": 1451953814000
+        "description": "new description",
+        "updated_at": 1451975170000
       },
       "name": "new milestone",
       "story_type": "feature"
@@ -43,5 +43,5 @@
     "name": "Marat Boshernitsan",
     "initials": "MB"
   },
-  "occurred_at": 1451953814000
+  "occurred_at": 1451975170000
 }

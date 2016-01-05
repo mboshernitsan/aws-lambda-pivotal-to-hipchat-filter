@@ -1,4 +1,6 @@
 {
+  "expected_status":"skipped",
+
   "kind": "story_move_activity",
   "guid": "472037_3900",
   "project_version": 3900,

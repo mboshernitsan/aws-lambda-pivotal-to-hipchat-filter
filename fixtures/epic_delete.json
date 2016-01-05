@@ -1,4 +1,6 @@
 {
+  "expected_status":"skipped",
+
   "kind": "epic_delete_activity",
   "guid": "472037_3898",
   "project_version": 3898,

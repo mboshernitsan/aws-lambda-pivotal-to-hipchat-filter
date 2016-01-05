@@ -1,4 +1,6 @@
 {
+  "expected_status":"skipped",
+ 
   "kind": "task_delete_activity",
   "guid": "472037_3887",
   "project_version": 3887,

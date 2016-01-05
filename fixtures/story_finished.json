@@ -1,111 +1,23 @@
 {
+  "expected_status":"sent",
+
   "kind": "story_update_activity",
-  "guid": "472037_3906",
-  "project_version": 3906,
-  "message": "Marat Boshernitsan started this feature",
-  "highlight": "started",
+  "guid": "472037_3918",
+  "project_version": 3918,
+  "message": "Marat Boshernitsan finished this feature",
+  "highlight": "finished",
   "changes": [
-    {
-      "kind": "label",
-      "change_type": "update",
-      "id": 2879415,
-      "original_values": {
-        "counts": {
-          "number_of_zero_point_stories_by_state": {
-            "accepted": 0,
-            "started": 0,
-            "finished": 0,
-            "unstarted": 0,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "sum_of_story_estimates_by_state": {
-            "accepted": 3,
-            "started": 0,
-            "finished": 0,
-            "unstarted": 2,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "number_of_stories_by_state": {
-            "accepted": 3,
-            "started": 0,
-            "finished": 0,
-            "unstarted": 1,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "kind": "story_counts"
-        }
-      },
-      "new_values": {
-        "counts": {
-          "number_of_zero_point_stories_by_state": {
-            "accepted": 0,
-            "started": 0,
-            "finished": 0,
-            "unstarted": 0,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "sum_of_story_estimates_by_state": {
-            "accepted": 3,
-            "started": 2,
-            "finished": 0,
-            "unstarted": 0,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "number_of_stories_by_state": {
-            "accepted": 3,
-            "started": 1,
-            "finished": 0,
-            "unstarted": 0,
-            "planned": 0,
-            "delivered": 0,
-            "unscheduled": 0,
-            "rejected": 0,
-            "kind": "counts_by_story_state"
-          },
-          "kind": "story_counts"
-        }
-      },
-      "name": "triage"
-    },
     {
       "kind": "story",
       "change_type": "update",
       "id": 111022492,
       "original_values": {
-        "current_state": "unstarted",
-        "owned_by_id": null,
-        "owner_ids": [
-
-        ],
-        "updated_at": 1451954018000
+        "current_state": "started",
+        "updated_at": 1452016243000
       },
       "new_values": {
-        "current_state": "started",
-        "owned_by_id": 411339,
-        "owner_ids": [
-          411339
-        ],
-        "updated_at": 1451954059000
+        "current_state": "finished",
+        "updated_at": 1452016248000
       },
       "name": "new milestone",
       "story_type": "feature"
@@ -131,5 +43,5 @@
     "name": "Marat Boshernitsan",
     "initials": "MB"
   },
-  "occurred_at": 1451954059000
+  "occurred_at": 1452016248000
 }

@@ -1,4 +1,6 @@
 {
+  "expected_status":"sent",
+
   "kind": "story_update_activity",
   "guid": "472037_3908",
   "project_version": 3908,

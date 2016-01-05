@@ -9,7 +9,7 @@ output/index.js: index.js
 	cp $< $@
 
 output/config.js: check-hipchat-env
-	echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)' }; module.exports = config;" > $@
+	@echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)' }; module.exports = config;" > $@
 
 output/node_modules:
 	npm install --prefix=output hipchat-client aws-lambda-mock-context
@@ -47,12 +47,15 @@ FIXTURES= \
 	epic_create.json \
 	epic_delete.json \
 	release_create.json \
+	story_attachment_add.json \
+	story_attachment_remove.json \
 	story_change_type.json \
 	story_comment_add.json \
 	story_comment_remove.json \
 	story_create.json \
 	story_delete_multi.json \
 	story_delivered.json \
+	story_description_change.json \
 	story_epic_add.json \
 	story_estimated.json \
 	story_finished.json \
@@ -60,15 +63,19 @@ FIXTURES= \
 	story_label_add_multi.json \
 	story_label_remove.json \
 	story_move_multi.json \
+	story_owner_add.json \
+	story_owner_remove.json \
 	story_started.json \
 	story_task_add.json \
 	story_task_remove.json
 
-
 localtest: output output/index.js output/config.js output/node_modules
-	$(foreach INPUT,$(FIXTURES),cd output && node -e "require('./index.js').handler(require('../fixtures/$(INPUT)'), require('aws-lambda-mock-context')())")
+	@$(foreach INPUT,$(FIXTURES),cd output && node -e "var ctx=require('aws-lambda-mock-context')(), fixture='../fixtures/$(INPUT)', test=require(fixture); \
+													  require('./index.js').handler(test, ctx); \
+													  ctx.Promise.then((result) => { console.log('%s %s', (result.status == test.expected_status) ? 'OK' : 'FAIL', fixture) }); \
+													  ctx.Promise.catch((err)   => { console.log('ERR %s: %s', fixture, err) })")
 
-test:
+posttest:
 ifndef AWS_LAMBDA_FUNCTION_URL
 	$(error AWS_LAMBDA_FUNCTION_URL is undefined)
 endif
