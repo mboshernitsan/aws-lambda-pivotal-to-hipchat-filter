@@ -11,8 +11,9 @@ output/index.js: index.js
 output/config.js: check-hipchat-env
 	@echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)' }; module.exports = config;" > $@
 
-output/node_modules:
-	npm install --prefix=output hipchat-client aws-lambda-mock-context
+output/node_modules: Makefile
+	@rm -fr output/node_modules
+	npm install --prefix=output hipchatter aws-lambda-mock-context
 
 output/function.zip: output output/index.js output/config.js output/node_modules
 	cd output && zip -r function.zip index.js config.js node_modules

@@ -2,8 +2,8 @@
 var config = require('./config');
 var util = require('util');
 
-var HipChatClient = require('hipchat-client');
-var hipchat = new HipChatClient(config.apiAuthToken);
+var HipChat = require('hipchatter');
+var hipchatter = new HipChat();
 
 exports.handler = (function(event, context) {
 	var skip = false, bgcolor = 'yellow';
@@ -96,8 +96,7 @@ exports.handler = (function(event, context) {
 
 	// creation message and options
 	var msg = {
-		room_id : config.roomId,
-		from : "Pivotal",
+		token : config.apiAuthToken,
 		message_format : "html",
 		color : bgcolor,
 		notify : false,
@@ -117,11 +116,11 @@ exports.handler = (function(event, context) {
 	}	
 	
 	// send message
-	hipchat.api.rooms.message(msg, function(err, res) {
+	hipchatter.notify(config.roomId, msg, function(err) {
 		if (err) {
 			throw err;
+		} else {
+		  	context.done(null, {"status":"sent"});
 		}
-
-	  	context.done(null, res);
 	});
 });
