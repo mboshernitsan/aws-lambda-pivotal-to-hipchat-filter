@@ -9,7 +9,7 @@ output/index.js: index.js
 	cp $< $@
 
 output/config.js: check-hipchat-env
-	echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)', from: 'Pivotal'}; module.exports = config;" > $@
+	echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)' }; module.exports = config;" > $@
 
 output/node_modules:
 	npm install --prefix=output hipchat-client aws-lambda-mock-context
@@ -39,11 +39,37 @@ endif
 deploy: check-aws-env output/function.zip
 	aws lambda update-function-code --function-name postToHipChatFromPivotal --zip-file fileb://output/function.zip
 
+
+FIXTURES= \
+	test.json \
+	bug_create.json \
+	chore_create.json \
+	epic_create.json \
+	epic_delete.json \
+	release_create.json \
+	story_change_type.json \
+	story_comment_add.json \
+	story_comment_remove.json \
+	story_create.json \
+	story_delete_multi.json \
+	story_delivered.json \
+	story_epic_add.json \
+	story_estimated.json \
+	story_finished.json \
+	story_label_add.json \
+	story_label_add_multi.json \
+	story_label_remove.json \
+	story_move_multi.json \
+	story_started.json \
+	story_task_add.json \
+	story_task_remove.json
+
+
 localtest: output output/index.js output/config.js output/node_modules
-	cd output && node -e "require('./index.js').handler(require('../fixtures/test1.json'), require('aws-lambda-mock-context')())"
+	$(foreach INPUT,$(FIXTURES),cd output && node -e "require('./index.js').handler(require('../fixtures/$(INPUT)'), require('aws-lambda-mock-context')())")
 
 test:
 ifndef AWS_LAMBDA_FUNCTION_URL
 	$(error AWS_LAMBDA_FUNCTION_URL is undefined)
 endif
-	curl -X POST -d @fixtures/test1.json $(AWS_LAMBDA_FUNCTION_URL)
+	$(foreach INPUT,$(FIXTURES),curl -X POST -d @fixtures/$(INPUT) $(AWS_LAMBDA_FUNCTION_URL))

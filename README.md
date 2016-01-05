@@ -2,8 +2,6 @@
 
 A simple Lambda function for transforming Pivotal web hook notifications and posting them to a Hip Chat room.
 
-*This is work-in-progress.  Much remains to be done, until this is functional.*
-
 ## Initial set up
 
 This needs to be done once using the AWS CLI commands below or the equivalent AWS Console operations.
@@ -41,5 +39,14 @@ $ aws apigateway put-integration-response --rest-api-id ${AWS_APIGATEWAY_ID} --r
 $ aws apigateway create-deployment --rest-api-id ${AWS_APIGATEWAY_ID} --stage-name prod
 
 $ export AWS_LAMBDA_FUNCTION_URL=https://${AWS_APIGATEWAY_ID}.execute-api.${AWS_DEFAULT_REGION}.amazonaws.com/prod
+```
+
+## Development loop
+
+After the steps above, it should be possible run make to deploy and test the function:
+
+```bash
+$ make deploy
+$ make test
 ```
 
