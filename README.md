@@ -1,6 +1,8 @@
-# aws-lambda-pivotal-to-hipchat
+# AWS Lambda Pivotal-to-HipChat filter
 
-A simple Lambda function for transforming Pivotal web hook notifications and posting them to a Hip Chat room.
+A simple Lambda function for filtering and transforming Pivotal activity web hook notifications and posting them to a HipChat room.
+
+*Important note:* for this integration, you will need to use HipChat API v1 tokens.  
 
 ## Initial set up
 
@@ -28,9 +30,9 @@ $ export AWS_APIGATEWAY_ID=... # lookup in the output above
 $ aws apigateway get-resources --rest-api-id ${AWS_APIGATEWAY_ID}
 $ export AWS_APIGATEWAY_RESOURCE_ID=... # lookup root resource id in the output above
 
-$ aws apigateway put-method --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --authorization-type none 
+$ aws apigateway put-method --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --authorization-type none --request-parameters '{ "method.request.querystring.hipchatToken": false, "method.request.querystring.hipchatRoom": false }'
 
-$ aws apigateway put-integration --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --type AWS --integration-http-method POST --uri arn:aws:apigateway:${AWS_DEFAULT_REGION}:lambda:path/2015-03-31/functions/${AWS_LAMBDA_FUNCTION_ARN}/invocations
+$ aws apigateway put-integration --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --type AWS --integration-http-method POST --uri arn:aws:apigateway:${AWS_DEFAULT_REGION}:lambda:path/2015-03-31/functions/${AWS_LAMBDA_FUNCTION_ARN}/invocations --request-templates '{ "application/json": "{\"hipchatToken\" : \"$util.urlDecode($input.params('\''hipchatToken'\''))\", \"hipchatRoom\" : \"$util.urlDecode($input.params('\''hipchatRoom'\''))\", \"activity\" : $input.json('\''$'\'')}"}'
 
 $ aws apigateway put-method-response --rest-api-id ${AWS_APIGATEWAY_ID} --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} --http-method POST --status-code 200 --response-models '{ "application/json": "Empty" }'
 
@@ -46,9 +48,11 @@ $ export AWS_LAMBDA_FUNCTION_URL=https://${AWS_APIGATEWAY_ID}.execute-api.${AWS_
 After the steps above, it should be possible run make to deploy and test the function (after setting HIPCHAT_TOKEN and HIPCHAT_ROOM):
 
 ```bash
-$ HIPCHAT_TOKEN=... HIPCHAT_ROOM=... make deploy
-$ make posttest
+$ make deploy
+$ HIPCHAT_TOKEN=... HIPCHAT_ROOM=... make posttest
 ```
+
+(If your HipChat room name contains non-URL-safe characters (such as spaces), it will need to be URL-encoded for the above to work).
 
 Alternatively, you can run the tests locally without deploying:
 
@@ -57,4 +61,16 @@ $ HIPCHAT_TOKEN=... HIPCHAT_ROOM=... make localtest
 ```
 
 Both tests will use the fixtures declared inside the Makefile.  ```make localtest``` will also validate the logic for skipping certain state transitions that we didn't find useful to blast to the team.
+
+## Integrate into Pivotal
+
+To integrate your filter into your Pivotal project, set your activity web hook URL on the project's Integrations settings page to:
+
+```bash
+$(AWS_LAMBDA_FUNCTION_URL)?hipchatToken=...&hipchatRoom=...
+```
+
+Again, remember to use your HipChat API v1 token and URL-encode the room name, if necessary.
+
+
 

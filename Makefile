@@ -8,15 +8,12 @@ output:
 output/index.js: index.js
 	cp $< $@
 
-output/config.js: check-hipchat-env
-	@echo "var config = { apiAuthToken: '$(HIPCHAT_TOKEN)', roomId: '$(HIPCHAT_ROOM)' }; module.exports = config;" > $@
-
-output/node_modules: Makefile
+output/node_modules:
 	@rm -fr output/node_modules
-	npm install --prefix=output hipchatter aws-lambda-mock-context
+	npm install --prefix=output hipchat-client aws-lambda-mock-context
 
-output/function.zip: output output/index.js output/config.js output/node_modules
-	cd output && zip -r function.zip index.js config.js node_modules
+output/function.zip: output output/index.js output/node_modules
+	cd output && zip -r function.zip index.js node_modules
 
 check-hipchat-env:
 ifndef HIPCHAT_TOKEN
@@ -60,6 +57,7 @@ FIXTURES= \
 	story_epic_add.json \
 	story_estimated.json \
 	story_finished.json \
+	story_accepted.json \
 	story_label_add.json \
 	story_label_add_multi.json \
 	story_label_remove.json \
@@ -70,14 +68,19 @@ FIXTURES= \
 	story_task_add.json \
 	story_task_remove.json
 
-localtest: output output/index.js output/config.js output/node_modules
-	@$(foreach INPUT,$(FIXTURES),cd output && node -e "var ctx=require('aws-lambda-mock-context')(), fixture='../fixtures/$(INPUT)', test=require(fixture); \
-													  require('./index.js').handler(test, ctx); \
-													  ctx.Promise.then((result) => { console.log('%s %s', (result.status == test.expected_status) ? 'OK' : 'FAIL', fixture) }); \
-													  ctx.Promise.catch((err)   => { console.log('ERR %s: %s', fixture, err) })")
+localtest: check-hipchat-env output output/index.js output/node_modules
+	@$(foreach INPUT,$(FIXTURES),\
+		cd output && node --use_strict -e \
+		"var ctx=require('aws-lambda-mock-context')(), fixture='../fixtures/$(INPUT)', test=require(fixture); \
+		 require('./index.js').handler({ hipchatToken:'$(HIPCHAT_TOKEN)', hipchatRoom:'$(HIPCHAT_ROOM)', activity:test}, ctx); \
+		 ctx.Promise.then((result) => { console.log('%s %s', (result.status == test.expected_status) ? 'OK' : 'FAIL', fixture) }); \
+		 ctx.Promise.catch((err)   => { console.log('ERR %s: %s', fixture, err) })")
 
-posttest:
+posttest: check-hipchat-env
 ifndef AWS_LAMBDA_FUNCTION_URL
 	$(error AWS_LAMBDA_FUNCTION_URL is undefined)
 endif
-	$(foreach INPUT,$(FIXTURES),curl -X POST -d @fixtures/$(INPUT) $(AWS_LAMBDA_FUNCTION_URL))
+	$(foreach INPUT,$(FIXTURES),\
+		curl -H "Content-Type: application/json" -X POST -d @fixtures/$(INPUT) \
+			'$(AWS_LAMBDA_FUNCTION_URL)/?hipchatToken=$(HIPCHAT_TOKEN)&hipchatRoom=$(HIPCHAT_ROOM)' ;)
+

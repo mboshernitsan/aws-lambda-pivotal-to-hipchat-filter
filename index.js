@@ -1,14 +1,12 @@
-// dependencies
-var config = require('./config');
 var util = require('util');
 
-var HipChat = require('hipchatter');
-var hipchatter = new HipChat();
+var HipChat = require('hipchat-client');
 
 exports.handler = (function(event, context) {
+	var activity = event.activity;
 	var skip = false, bgcolor = 'yellow';
 
-	switch (event.kind) {
+	switch (activity.kind) {
 		case "task_create_activity": 
 		case "comment_create_activity":
 			skip = false;
@@ -23,14 +21,14 @@ exports.handler = (function(event, context) {
 
 		case "story_update_activity":
 			skip = true;
-			for (var i = 0; i < event.changes.length; i++) {
-				var change = event.changes[i];
+			for (var i = 0; i < activity.changes.length; i++) {
+				var change = activity.changes[i];
 				// skip non-story changes
 				if (change.kind != 'story') {
 					continue;
 				}
 				// iterate over changed fields to determine if we care
-				for (field in change.new_values) {
+				for (var field in change.new_values) {
 					switch (field) {
 						case "current_state":
 							switch (change.new_values.current_state) {
@@ -96,16 +94,16 @@ exports.handler = (function(event, context) {
 
 	// creation message and options
 	var msg = {
-		token : config.apiAuthToken,
+		from: "Pivotal",
+		room_id : event.hipchatRoom,
 		message_format : "html",
 		color : bgcolor,
 		notify : false,
-		message : event.message
+		message : activity.message
 	};
 
-
-	if (event.primary_resources.length == 1) {
-		var resource = event.primary_resources[0];
+	if (activity.primary_resources.length == 1) {
+		var resource = activity.primary_resources[0];
 
 		// resolve indefinite phrase in message
 		msg.message = msg.message.replace(/this (feature|epic|bug|chore|release)/g, 
@@ -114,13 +112,11 @@ exports.handler = (function(event, context) {
 		// append Pivotal URL
 		msg.message += util.format(" <a href=%s>view »</a>", resource.url);
 	}	
+
+	var hipchatter = new HipChat(event.hipchatToken);
 	
 	// send message
-	hipchatter.notify(config.roomId, msg, function(err) {
-		if (err) {
-			throw err;
-		} else {
-		  	context.done(null, {"status":"sent"});
-		}
+	hipchatter.api.rooms.message(msg, function(err, res) {
+		context.done(err, res);
 	});
 });
