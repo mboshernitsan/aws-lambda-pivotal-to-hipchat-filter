@@ -1,6 +1,6 @@
 # AWS Lambda Pivotal-to-HipChat filter
 
-A simple Lambda function for filtering and transforming Pivotal activity web hook notifications and posting them to a HipChat room.
+An AWS Lambda function for filtering and transforming Pivotal activity web hook (v5) notifications and posting them to a HipChat room.  We find this cleaner and more flexible than the official HipChat Pivotal endpoint (https://confluence.atlassian.com/display/HIPCHATKB/Pivotal+Tracker+integration).
 
 *Important note:* for this integration, you will need to use HipChat API v1 tokens.  
 
@@ -21,7 +21,7 @@ $ export AWS_LAMBDA_ROLE_ARN=...
 
 # Create the function itself
 $ aws lambda create-function 
-	-function-name postToHipChatFromPivotal 
+	--function-name postToHipChatFromPivotal 
 	--runtime nodejs 
 	--role ${AWS_LAMBDA_ROLE_ARN} 
 	--handler index.handler
