@@ -47,16 +47,17 @@ $ aws apigateway put-integration --rest-api-id ${AWS_APIGATEWAY_ID}
                                  --uri arn:aws:apigateway:${AWS_DEFAULT_REGION}:lambda:path/2015-03-31/functions/${AWS_LAMBDA_FUNCTION_ARN}/invocations 
                                  --request-templates '{ "application/json": "{\"hipchatToken\" : \"$util.urlDecode($input.params('\''hipchatToken'\''))\", \"hipchatRoom\" : \"$util.urlDecode($input.params('\''hipchatRoom'\''))\", \"activity\" : $input.json('\''$'\'')}"}'
 
+$ aws apigateway put-integration-response --rest-api-id ${AWS_APIGATEWAY_ID} 
+                                          --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} 
+                                          --http-method POST 
+                                          --status-code 200 
+                                          --response-templates '{ "application/json": "" }'
+
 $ aws apigateway put-method-response --rest-api-id ${AWS_APIGATEWAY_ID} 
                                      --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} 
                                      --http-method POST 
                                      --status-code 200 
                                      --response-models '{ "application/json": "Empty" }'
-
-$ aws apigateway put-integration-response --rest-api-id ${AWS_APIGATEWAY_ID} 
-                                          --resource-id ${AWS_APIGATEWAY_RESOURCE_ID} 
-                                          --http-method POST --status-code 200 
-                                          --response-templates '{ "application/json": "" }'
 
 $ aws apigateway create-deployment --rest-api-id ${AWS_APIGATEWAY_ID} 
                                    --stage-name prod
