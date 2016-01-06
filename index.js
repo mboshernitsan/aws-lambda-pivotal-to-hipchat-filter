@@ -41,10 +41,6 @@ exports.handler = (function(event, context) {
 							}
 							skip = false;
 							break;
-						case "estimate":
-							bgcolor = 'gray';
-							skip = false;
-							break;
 					}
 				}
 			}
