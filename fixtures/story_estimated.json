@@ -1,5 +1,5 @@
 {
-  "expected_status":"sent",
+  "expected_status":"skipped",
 
   "kind": "story_update_activity",
   "guid": "472037_3905",
