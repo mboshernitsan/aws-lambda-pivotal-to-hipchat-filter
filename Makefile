@@ -49,6 +49,7 @@ FIXTURES= \
 	story_attachment_remove.json \
 	story_change_type.json \
 	story_comment_add.json \
+	story_commit_comment_add.json \
 	story_comment_remove.json \
 	story_create.json \
 	story_delete_multi.json \

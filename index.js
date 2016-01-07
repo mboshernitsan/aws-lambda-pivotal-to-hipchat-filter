@@ -8,9 +8,22 @@ exports.handler = (function(event, context) {
 
 	switch (activity.kind) {
 		case "task_create_activity": 
+			skip = false;
+			bgcolor = 'gray';
+			break;
+
 		case "comment_create_activity":
 			skip = false;
 			bgcolor = 'gray';
+
+			for (var i = 0; i < activity.changes.length; i++) {
+				var change = activity.changes[i];
+				// skip commit comments
+				if (change.kind == 'comment' && change.change_type == 'create' && /^Commit/.test(change.new_values.text)) {
+					skip = true;
+					break;
+				}
+			}
 			break;
 
 		case "story_create_activity":
@@ -24,7 +37,7 @@ exports.handler = (function(event, context) {
 			for (var i = 0; i < activity.changes.length; i++) {
 				var change = activity.changes[i];
 				// skip non-story changes
-				if (change.kind != 'story') {
+				if (change.kind != 'story' || change.change_type != 'update') {
 					continue;
 				}
 				// iterate over changed fields to determine if we care
