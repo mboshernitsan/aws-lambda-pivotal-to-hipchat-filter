@@ -48,7 +48,7 @@ exports.handler = (function(event, context) {
 								case "accepted":
 									bgcolor = 'green';
 									break;
-								case "rejeceted":
+								case "rejected":
 									bgcolor = 'red';
 									break;
 							}
