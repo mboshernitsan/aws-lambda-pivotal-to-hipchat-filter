@@ -15,6 +15,7 @@ exports.handler = (function(event, context) {
 		case "comment_create_activity":
 			skip = false;
 			bgcolor = 'gray';
+			activity.message += " to this feature";
 
 			for (var i = 0; i < activity.changes.length; i++) {
 				var change = activity.changes[i];
@@ -114,9 +115,14 @@ exports.handler = (function(event, context) {
 	if (activity.primary_resources.length == 1) {
 		var resource = activity.primary_resources[0];
 
-		// resolve indefinite phrase in message
-		msg.message = msg.message.replace(/this (feature|epic|bug|chore|release)/g, 
-			util.format("%s: \"%s\"", (resource.kind == "story" ? resource.story_type : resource.kind), resource.name));
+		// resolve indefinite phrase in message outside of quoted strings
+		msg.message = msg.message.replace(/"[^"]*"|(this (feature|epic|bug|chore|release))/g,
+			function(match, group1) {
+				if (!group1) return match; // matched something quoted, just return it
+				else return util.format("%s: \"%s\"", (resource.kind == "story" 
+														? resource.story_type 
+														: resource.kind), resource.name);
+			});
 
 		// append Pivotal URL
 		msg.message += util.format(" <a href=%s>view »</a>", resource.url);

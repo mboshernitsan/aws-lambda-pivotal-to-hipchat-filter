@@ -65,6 +65,7 @@ FIXTURES= \
 	story_move_multi.json \
 	story_owner_add.json \
 	story_owner_remove.json \
+	story_rejected.json \
 	story_started.json \
 	story_task_add.json \
 	story_task_remove.json
